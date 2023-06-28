@@ -1,0 +1,228 @@
+#include "smartcalc.h"
+
+#test calc_1
+  int status = 0;
+  double result = 0;
+  char *data = "2+2";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq(result, 4);
+
+#test calc_2
+  int status = 0;
+  double result = 0;
+  char *data = "2-(-2)";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq(result, 4);
+
+#test calc_3
+  int status = 0;
+  double result = 0;
+  char *data = "2.2*2/(2.2+2.2)";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq(result, 1);
+
+#test calc_4
+  int status = 0;
+  double result = 0;
+  char *data = "4mod3";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq(result, 1);
+
+#test calc_5
+  int status = 0;
+  double result = 0;
+  char *data = "2^3";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq(result, 8);
+
+#test calc_6
+  int status = 0;
+  double result = 0;
+  char *data = "cos(2)-sin(sqrt(4))";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq_tol(result, -1.3254442, 1e-7);
+
+#test calc_7
+  int status = 0;
+  double result = 0;
+  char *data = "tan(2)+ln(4)";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq_tol(result, -0.7987455, 1e-7);
+
+#test calc_8
+  int status = 0;
+  double result = 0;
+  char *data = "(atan(0.5)+asin(0.5)+acos(0.5))/(log(10))";
+  Stack_t stack = {NULL, NULL};
+  Stack_t rpn_stack = {NULL, NULL};
+  status = check_data(data);
+  ck_assert_int_eq(status, 0);
+  status = parse_str(data, &stack);
+  rpn_stack = convert_to_rpn(&stack);
+  result = calculate(&rpn_stack);
+  ck_assert_int_eq(status, 0);
+  ck_assert_double_eq_tol(result, 2.0344439, 1e-7);
+
+#test calc_9
+  int status = 0;
+  char *data = "10.21.12+2";
+  Stack_t stack = {NULL, NULL};
+  status = parse_str(data, &stack);
+  ck_assert_int_eq(status, 1);
+
+#test calc_10
+  int status = 0;
+  char *data = "222%12";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_11
+  int status = 0;
+  char *data = "2mmod2";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_12
+  int status = 0;
+  char *data = "coos(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_13
+  int status = 0;
+  char *data = "s(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_14
+  int status = 0;
+  char *data = "arccos(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_15
+  int status = 0;
+  char *data = "(mod2)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_16
+  int status = 0;
+  char *data = "27cos(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_17
+  int status = 0;
+  char *data = "27sin(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_18
+  int status = 0;
+  char *data = "27tan(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_19
+  int status = 0;
+  char *data = "27acos(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_20
+  int status = 0;
+  char *data = "27asin(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_21
+  int status = 0;
+  char *data = "27atan(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_22
+  int status = 0;
+  char *data = "27log(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_23
+  int status = 0;
+  char *data = "lg(x)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_24
+  int status = 0;
+  char *data = "2+.2";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_25
+  int status = 0;
+  char *data = "2.(2)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_26
+  int status = 0;
+  char *data = "2*+2";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
+
+#test calc_27
+  int status = 0;
+  char *data = "cos(*2)";
+  status = check_data(data);
+  ck_assert_int_eq(status, 1);
